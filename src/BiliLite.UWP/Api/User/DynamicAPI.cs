@@ -294,7 +294,7 @@ namespace BiliLite.Api.User
         /// <returns></returns>
         public ApiModel RepostDynamic(string dynamic_id, string content, string at_uids, string at_control)
         {
-            $"uid={SettingHelper.Account.UserID}&dynamic_id={dynamic_id}&content={Uri.EscapeDataString(content)}&at_uids={Uri.EscapeDataString(at_uids)}&at_control={Uri.EscapeDataString(at_control)}&extension=%7B%22emoji_type%22%3A1%7D"
+            //$"uid={SettingHelper.Account.UserID}&dynamic_id={dynamic_id}&content={Uri.EscapeDataString(content)}&at_uids={Uri.EscapeDataString(at_uids)}&at_control={Uri.EscapeDataString(at_control)}&extension=%7B%22emoji_type%22%3A1%7D"
             ApiParameter body = new ApiParameter
             {
                 { "uid", SettingHelper.Account.UserID.ToString() },
