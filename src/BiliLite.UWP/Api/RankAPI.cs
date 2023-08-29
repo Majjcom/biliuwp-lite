@@ -23,14 +23,19 @@ namespace BiliLite.Api
         /// <param name="rid">分区ID</param>
         /// <param name="type">all=全站，origin=原创，rookie=新人</param>
         /// <returns></returns>
-        public ApiModel Rank(int rid,string type)
+        public ApiModel Rank(int rid, string type)
         {
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-interface/ranking/v2",
-                parameter = $"rid={rid}&type={type}"
+                parameter = new ApiParameter
+                {
+                    { "rid", rid.ToString() },
+                    { "type", type }
+                }
             };
+            //$"rid={rid}&type={type}"
             return api;
         }
 
@@ -46,11 +51,13 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/season/rank/list",
-                parameter = $"season_type={type}"
+                parameter = new ApiParameter
+                {
+                    { "season_type", type.ToString() }
+                }
             };
+            //$"season_type={type}"
             return api;
         }
-
-
     }
 }

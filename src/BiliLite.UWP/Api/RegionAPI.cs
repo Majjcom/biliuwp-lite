@@ -26,55 +26,86 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/region/dynamic",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, false)+ $"&rid={rid}"
+                parameter = new ApiParameter
+                {
+                    { "rid", rid.ToString() }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, false)
             };
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + $"&rid={rid}"
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
-        public ApiModel RegionDynamic(int rid,string next_aid)
+        public ApiModel RegionDynamic(int rid, string next_aid)
         {
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://app.biliapi.net/x/v2/region/dynamic/list",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + $"&rid={rid}&ctime={next_aid}&pull=false"
+                parameter = new ApiParameter
+                {
+                    { "rid", rid.ToString() },
+                    { "ctime", next_aid },
+                    { "pull", "false" }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, false)
             };
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + $"&rid={rid}&ctime={next_aid}&pull=false"
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
 
 
-        public ApiModel RegionChildDynamic(int rid, int tag_id=0)
+        public ApiModel RegionChildDynamic(int rid, int tag_id = 0)
         {
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://app.biliapi.net/x/v2/region/dynamic/child",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + $"&rid={rid}&tag_id={tag_id}&pull=true"
+                parameter = new ApiParameter
+                {
+                    { "rid", rid.ToString() },
+                    { "tag_id", tag_id.ToString() },
+                    { "pull", "true" }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, false)
             };
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + $"&rid={rid}&tag_id={tag_id}&pull=true"
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
 
-        public ApiModel RegionChildDynamic(int rid,string next, int tag_id = 0)
+        public ApiModel RegionChildDynamic(int rid, string next, int tag_id = 0)
         {
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/region/dynamic/child/list",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + $"&rid={rid}&tag_id={tag_id}&pull=false&ctime={next}"
+                parameter = new ApiParameter
+                {
+                    { "rid", rid.ToString() },
+                    { "tag_id", tag_id.ToString() },
+                    { "pull", "false" },
+                    { "ctime", next }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, false)
             };
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + $"&rid={rid}&tag_id={tag_id}&pull=false&ctime={next}"
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
-        public ApiModel RegionChildList(int rid,string order, int page , int tag_id = 0)
+        public ApiModel RegionChildList(int rid, string order, int page, int tag_id = 0)
         {
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://app.biliapi.net/x/v2/region/show/child/list",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + $"&order={order}&pn={page}&ps=20&rid={rid}&tag_id={tag_id}"
+                parameter = new ApiParameter
+                {
+                    { "order", order },
+                    { "pn", page.ToString() },
+                    { "ps", "2" },
+                    { "rid", rid.ToString() },
+                    { "tag_id", tag_id.ToString() }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, false)
             };
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + $"&order={order}&pn={page}&ps=20&rid={rid}&tag_id={tag_id}"
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
