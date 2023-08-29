@@ -87,7 +87,7 @@ namespace BiliLite.Api
             };
         }
 
-        public static ApiParameter GetSign(IDictionary<string, string> pars, ApiKeyInfo apiKeyInfo)
+        public static ApiParameter GetSign(ApiParameter pars, ApiKeyInfo apiKeyInfo)
         {
             StringBuilder sb = new StringBuilder();
             foreach (var item in pars.OrderBy(x => x.Key))
