@@ -533,5 +533,10 @@ namespace BiliLite.Helpers
             public const string DEFAULT_VIDEO_TYPE = "DownloadDefaultVideoType";
 
         }
+
+        public class WbiStorage
+        {
+            public const string WBI_STORAGE = "WbiStorage";
+        }
     }
 }

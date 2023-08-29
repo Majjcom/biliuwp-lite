@@ -5,10 +5,43 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using ApiParameter = System.Collections.Generic.Dictionary<string, string>;
+//using ApiParameter = System.Collections.Generic.Dictionary<string, string>;
 
 namespace BiliLite.Api
 {
+    public class ApiParameter : System.Collections.Generic.Dictionary<string, string>
+    {
+        public ApiParameter(): base()
+        {
+        }
+
+        override public string ToString()
+        {
+            string ret = "";
+            foreach (var item in this)
+            {
+                if (ret.Length != 0)
+                {
+                    ret += '&';
+                }
+                ret += item.Key;
+                ret += '=';
+                ret += item.Value;
+            }
+            return ret;
+        }
+
+        public ApiParameter Concat(ApiParameter other)
+        {
+            return this.Concat(other);
+        }
+
+        public static ApiParameter operator +(ApiParameter first ,ApiParameter second)
+        {
+            return first.Concat(second);
+        }
+    }
+
     public static class ApiHelper
     { 
         // BiliLite.WebApi 项目部署的服务器
@@ -34,7 +67,7 @@ namespace BiliLite.Api
         private const string _platform = "android";
         public static string deviceId = "";
         
-        public static string GetSign(string url, ApiKeyInfo apiKeyInfo, string par = "&sign=")
+        public static ApiParameter GetSign(string url, ApiKeyInfo apiKeyInfo)
         {
             string result;
             string str = url.Substring(url.IndexOf("?", 4) + 1);
@@ -48,10 +81,13 @@ namespace BiliLite.Api
             }
             stringBuilder.Append(apiKeyInfo.Secret);
             result = Utils.ToMD5(stringBuilder.ToString()).ToLower();
-            return par + result;
+            return new ApiParameter
+            {
+                { "sign", result }
+            };
         }
 
-        public static string GetSign(IDictionary<string, string> pars, ApiKeyInfo apiKeyInfo)
+        public static ApiParameter GetSign(IDictionary<string, string> pars, ApiKeyInfo apiKeyInfo)
         {
             StringBuilder sb = new StringBuilder();
             foreach (var item in pars.OrderBy(x => x.Key))
@@ -63,7 +99,11 @@ namespace BiliLite.Api
             }
             var results = sb.ToString().TrimEnd('&');
             results = results + apiKeyInfo.Secret;
-            return "&sign=" + Utils.ToMD5(results).ToLower();
+            
+            return new ApiParameter
+            {
+                { "sign", Utils.ToMD5(results).ToLower() }
+            };
         }
 
         /// <summary>
@@ -71,14 +111,23 @@ namespace BiliLite.Api
         /// </summary>
         /// <param name="needAccesskey">是否需要accesskey</param>
         /// <returns></returns>
-        public static string MustParameter(ApiKeyInfo apikey, bool needAccesskey = false)
+        public static ApiParameter MustParameter(ApiKeyInfo apikey, bool needAccesskey = false)
         {
-            var url = "";
+            ApiParameter ret = new ApiParameter
+            {
+                { "appkey", apikey.Appkey },
+                { "build", build },
+                { "mobi_app", _mobi_app },
+                { "platform", _platform },
+                { "ts", Utils.GetTimestampS().ToString() },
+            };
+            
             if (needAccesskey && SettingHelper.Account.Logined)
             {
-                url = $"access_key={SettingHelper.Account.AccessKey}&";
+                ret.Add("access_key", SettingHelper.Account.AccessKey);
             }
-            return url + $"appkey={apikey.Appkey}&build={build}&mobi_app={_mobi_app}&platform={_platform}&ts={Utils.GetTimestampS()}";
+
+            return ret;
         }
         /// <summary>
         /// 默认一些请求头
@@ -120,7 +169,7 @@ namespace BiliLite.Api
         /// <summary>
         /// Url参数
         /// </summary>
-        public string parameter { get; set; }
+        public ApiParameter parameter { get; set; }
         /// <summary>
         /// 发送内容体，用于POST方法
         /// </summary>
@@ -141,8 +190,15 @@ namespace BiliLite.Api
         {
             get
             {
-                return baseUrl + "?" + parameter;
+                return baseUrl + "?" + caculate_parameter();
             }
+        }
+
+        private string caculate_parameter()
+        {
+            ApiParameter p = WbiHelper.EncodeWbi(parameter);
+
+            return p.ToString();
         }
     }
 }
