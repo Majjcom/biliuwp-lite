@@ -38,19 +38,36 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply",
-                parameter =  $"oid={oid}&plat=2&pn={pn}&ps={ps}&sort={(int)sort}&type={type}"
+                parameter = new ApiParameter
+                {
+                    { "oid", oid },
+                    { "plat", "2" },
+                    { "pn", pn.ToString() },
+                    { "ps", ps.ToString() },
+                    { "sort", ((int)sort).ToString() },
+                    { "type", type.ToString() }
+                }
             };
+            //$"oid={oid}&plat=2&pn={pn}&ps={ps}&sort={(int)sort}&type={type}"
             //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
-        public ApiModel Reply(string oid,string root, int pn, int type, int ps = 30)
+        public ApiModel Reply(string oid, string root, int pn, int type, int ps = 30)
         {
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/reply",
-                parameter =  $"oid={oid}&plat=2&pn={pn}&ps={ps}&root={root}&type={type}"
+                parameter = new ApiParameter
+                {
+                    { "oid", oid },
+                    { "plat", "2" },
+                    { "ps", ps.ToString() },
+                    { "root", root },
+                    { "type", type.ToString() }
+                }
             };
+            //$"oid={oid}&plat=2&pn={pn}&ps={ps}&root={root}&type={type}"
             //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
@@ -61,8 +78,15 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/action",
-                body =  $"&oid={oid}&rpid={root}&action={action}&type={type}"
+                body = new ApiParameter
+                {
+                    { "oid", oid },
+                    { "rpid", root },
+                    { "action", action.ToString() },
+                    { "type", type.ToString() }
+                }.ToString()
             };
+            //$"&oid={oid}&rpid={root}&action={action}&type={type}"
             //api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
             return api;
         }
@@ -73,9 +97,17 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/add",
-                body =  $"&oid={oid}&root={root}&parent={parent}&type={type}&message={message}"
+                body = new ApiParameter
+                {
+                    { "oid", oid },
+                    { "root", root },
+                    { "parent", parent },
+                    { "type", type.ToString() },
+                    { "message", message }
+                }.ToString()
             };
-           // api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            //$"&oid={oid}&root={root}&parent={parent}&type={type}&message={message}"
+            // api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
             return api;
         }
         public ApiModel DeleteComment(string oid, string rpid, int type)
@@ -84,9 +116,15 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/del",
-                body =  $"&oid={oid}&rpid={rpid}&type={type}"
+                body = new ApiParameter
+                {
+                    { "oid", oid },
+                    { "rpid", rpid },
+                    { "type", type.ToString() }
+                }.ToString()
             };
-           // api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            //$"&oid={oid}&rpid={rpid}&type={type}"
+            // api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
             return api;
         }
         public ApiModel AddComment(string oid, CommentType type,string message)
@@ -95,8 +133,14 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/reply/add",
-                body = $"&oid={oid}&type={(int)type}&message={Uri.EscapeDataString(message)}"
+                body = new ApiParameter
+                {
+                    { "oid", oid },
+                    { "type", ((int)type).ToString() },
+                    { "message", Uri.EscapeDataString(message) }
+                }.ToString()
             };
+            //$"&oid={oid}&type={(int)type}&message={Uri.EscapeDataString(message)}"
             //api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
             return api;
         }
