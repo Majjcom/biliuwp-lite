@@ -32,7 +32,7 @@ namespace BiliLite.Api
         /// <param name="type">类型，1=视频，17=动态，11=图片，5=小视频，19=歌单，14=歌曲</param>
         /// <param name="ps">每页数量</param>
         /// <returns></returns>
-        public ApiModel Comment(string oid, CommentSort sort,int pn, int type, int ps = 30)
+        public ApiModel Comment(string oid, CommentSort sort,int pn, int type, int ps = 20)
         {
             ApiModel api = new ApiModel()
             {
@@ -52,7 +52,7 @@ namespace BiliLite.Api
             //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
-        public ApiModel Reply(string oid, string root, int pn, int type, int ps = 30)
+        public ApiModel Reply(string oid, string root, int pn, int type, int ps = 20)
         {
             ApiModel api = new ApiModel()
             {
