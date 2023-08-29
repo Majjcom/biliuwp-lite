@@ -148,7 +148,7 @@ namespace BiliLite.Pages
                 });
             });
             //图片圆角半径
-            numImageCornerRadius.Value = SettingHelper.GetValue<double>(SettingHelper.UI.IMAGE_CORNER_RADIUS, 0);
+            numImageCornerRadius.Value = SettingHelper.GetValue<double>(SettingHelper.UI.IMAGE_CORNER_RADIUS, 10);
             ImageCornerRadiusExample.CornerRadius = new CornerRadius(numImageCornerRadius.Value);
             numImageCornerRadius.Loaded += new RoutedEventHandler((sender, e) =>
             {

@@ -179,7 +179,7 @@ namespace BiliLite
                 }
             }
             //圆角
-            App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingHelper.GetValue<double>(SettingHelper.UI.IMAGE_CORNER_RADIUS, 0));
+            App.Current.Resources["ImageCornerRadius"] = new CornerRadius(SettingHelper.GetValue<double>(SettingHelper.UI.IMAGE_CORNER_RADIUS, 10));
             await AppHelper.SetRegions();
             DownloadVM.Instance.LoadDownloading();
             DownloadVM.Instance.LoadDownloaded();
