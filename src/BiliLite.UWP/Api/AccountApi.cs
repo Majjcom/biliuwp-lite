@@ -42,7 +42,7 @@ namespace BiliLite.Api
 
             if (captcha != "")
             {
-                body = body + new ApiParameter
+                body += new ApiParameter
                 {
                     { "captcha", captcha }
                 };
@@ -319,7 +319,7 @@ namespace BiliLite.Api
                 body = body.ToString(),
             };
             //$"&local_id={local_id}"
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidTVKey);
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidTVKey).ToString();
             return api;
         }
 

@@ -33,44 +33,50 @@ namespace BiliLite.Helpers
             return MixinKeyEncTab.Aggregate("", (s, i) => s + orig[i]).Substring(0, 32);
         }
 
-        public static async void LoadWbi()
+        public static async Task<(string, string)> LoadWbi()
         {
-            HttpResponseMessage responseMessage = await _httpClient.SendAsync(new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri("https://api.bilibili.com/x/web-interface/nav"),
-            });
+            //HttpResponseMessage responseMessage = await _httpClient.SendAsync(new HttpRequestMessage
+            //{
+            //    Method = HttpMethod.Get,
+            //    RequestUri = new Uri("https://api.bilibili.com/x/web-interface/nav"),
+            //});
 
-            JObject response = JObject.Parse(await responseMessage.Content.ReadAsStringAsync());
+            //responseMessage.Content.ReadAsStringAsync();
+
+            var responseMessage = await HttpHelper.Get("https://api.bilibili.com/x/web-interface/nav");
+
+            JObject response = JObject.Parse(responseMessage.results);
 
             imgUrl = response["data"]["wbi_img"]["img_url"].ToString();
             imgUrl = imgUrl.Split("/").Last().Split(".")[0];
 
             subUrl = response["data"]["wbi_img"]["sub_url"].ToString();
             subUrl = subUrl.Split("/").Last().Split(".")[0];
+
+            return (imgUrl, subUrl);
         }
 
-        private static (string, string) GetWbiKeys()
+        private async static Task<(string, string)> GetWbiKeys()
         {
             if (imgUrl.Length == 0)
             {
-                LoadWbi();
+                await LoadWbi();
             }
             return (imgUrl, subUrl);
         }
 
-        public static ApiParameter EncodeWbi(ApiParameter parameters)
+        public async static Task<ApiParameter> EncodeWbi(ApiParameter parameters)
         {
-            var (imgKey, subKey) = GetWbiKeys();
+            var (imgKey, subKey) = await GetWbiKeys();
 
             string mixinKey = GetMixinKey(imgKey + subKey);
             string currTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
             //添加 wts 字段
             parameters["wts"] = currTime;
             // 按照 key 重排参数
-            parameters = (ApiParameter)parameters.OrderBy(p => p.Key).ToDictionary(p => p.Key, p => p.Value);
+            var parameters_d = parameters.OrderBy(p => p.Key).ToDictionary(p => p.Key, p => p.Value);
             //过滤 value 中的 "!'()*" 字符
-            parameters = (ApiParameter)parameters.ToDictionary(
+            parameters_d = parameters.ToDictionary(
                 kvp => kvp.Key,
                 kvp => new string(kvp.Value.Where(chr => !"!'()*".Contains(chr)).ToArray())
             );
@@ -82,7 +88,7 @@ namespace BiliLite.Helpers
             string wbiSign = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
             parameters["w_rid"] = wbiSign;
 
-            return parameters;
+            return new ApiParameter(parameters);
         }
     }
 }

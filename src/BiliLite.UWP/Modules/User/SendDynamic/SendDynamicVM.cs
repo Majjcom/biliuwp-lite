@@ -82,7 +82,7 @@ namespace BiliLite.Modules.User
                 IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read);
                 var bytes = new byte[fileStream.Size];
                 await fileStream.ReadAsync(bytes.AsBuffer(), (uint)fileStream.Size, Windows.Storage.Streams.InputStreamOptions.None);
-                var client = new RestClient(api.url);
+                var client = new RestClient(await api.Get_url());
                 var request = new RestRequest();
                 request.Method = Method.Post;
                 request.AddParameter("biz", "draw");

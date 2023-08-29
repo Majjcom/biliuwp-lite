@@ -41,13 +41,13 @@ namespace BiliLite.Helpers
             {
                 if (api.need_cookie)
                 {
-                    return await HttpHelper.GetWithWebCookie(api.url, api.headers);
+                    return await HttpHelper.GetWithWebCookie(await api.Get_url(), api.headers);
                 }
-                return await HttpHelper.Get(api.url, api.headers);
+                return await HttpHelper.Get(await api.Get_url(), api.headers);
             }
             else
             {
-                return await HttpHelper.Post(api.url, api.body, api.headers);
+                return await HttpHelper.Post(await api.Get_url(), api.body, api.headers);
             }
         }
 

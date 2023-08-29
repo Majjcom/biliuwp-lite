@@ -135,7 +135,7 @@ namespace BiliLite.Modules
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
 
-                var data = await HttpHelper.GetStream(PlayerAPI.SegDanmaku(cid, segment_index).url);
+                var data = await HttpHelper.GetStream(await PlayerAPI.SegDanmaku(cid, segment_index).Get_url());
                 var result = Proto.Reply.DmSegMobileReply.Parser.ParseFrom(data);
                 foreach (var item in result.Elems)
                 {

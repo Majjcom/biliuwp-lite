@@ -194,14 +194,21 @@ namespace BiliLite.Api
         {
             get
             {
-                return baseUrl + "?" + caculate_parameter();
+                return baseUrl + '?' + parameter.ToString();
             }
         }
 
-        private string caculate_parameter()
+        public async Task<string> Get_url()
         {
-            //ApiParameter p = WbiHelper.EncodeWbi(parameter);
+            
+            return baseUrl + "?" + await caculate_parameter();
+            
+        }
 
+        private async Task<string> caculate_parameter()
+        {
+            //ApiParameter p = await WbiHelper.EncodeWbi(parameter);
+            //return p.ToString();
             return parameter.ToString();
         }
     }
