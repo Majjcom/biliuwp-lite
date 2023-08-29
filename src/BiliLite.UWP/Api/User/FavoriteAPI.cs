@@ -18,22 +18,32 @@ namespace BiliLite.Api.User
         /// <returns></returns>
         public ApiModel MyFavorite()
         {
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&up_mid={SettingHelper.Account.UserID}"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/created/list-all",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&up_mid={SettingHelper.Account.UserID}"
+                parameter = new ApiParameter
+                {
+                    { "up_mid", SettingHelper.Account.UserID.ToString() }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
             };
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
         public ApiModel MyCreatedFavoriteList(int page)
         {
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&up_mid={SettingHelper.Account.UserID}&pn={page}&ps=20"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/collected/list",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&up_mid={SettingHelper.Account.UserID}&pn={page}&ps=20"
+                parameter = new ApiParameter
+                {
+                    { "up_mid", SettingHelper.Account.UserID.ToString() },
+                    { "pn", page.ToString() },
+                    { "ps", "20" }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
             };
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
@@ -44,12 +54,20 @@ namespace BiliLite.Api.User
         /// <returns></returns>
         public ApiModel MyCreatedFavorite(string aid)
         {
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&rid={aid}&up_mid={SettingHelper.Account.UserID}&type=2&pn=1&ps=100"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 //baseUrl = $"{ApiHelper.API_BASE_URL}/medialist/gateway/base/created",
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/collected/list",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&rid={aid}&up_mid={SettingHelper.Account.UserID}&type=2&pn=1&ps=100"
+                parameter = new ApiParameter
+                {
+                    { "rid", aid },
+                    { "up_mid", SettingHelper.Account.UserID.ToString() },
+                    { "type", "2" },
+                    { "pn", "1" },
+                    { "ps", "100" }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
             };
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
@@ -67,13 +85,21 @@ namespace BiliLite.Api.User
                 ids += item + ",";
             }
             ids = Uri.EscapeDataString(ids.TrimEnd(','));
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&add_media_ids={ids}&rid={avid}&type=2"
+            ApiParameter body = new ApiParameter
+            {
+                { "add_media_ids", ids },
+                { "rid", avid },
+                { "type", "2" }
+            } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true);
+
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/medialist/gateway/coll/resource/deal",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&add_media_ids={ids}&rid={avid}&type=2"
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidKey).ToString();
             return api;
         }
 
@@ -81,32 +107,43 @@ namespace BiliLite.Api.User
         /// 收藏收藏夹
         /// </summary>
         /// <returns></returns>
-        public ApiModel CollectFavorite( string media_id)
+        public ApiModel CollectFavorite(string media_id)
         {
-          
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&media_id={media_id}"
+            ApiParameter body = new ApiParameter
+            {
+                { "media_id", media_id }
+            } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true);
+
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/fav",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&media_id={media_id}"
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidKey).ToString();
             return api;
         }
+
         /// <summary>
         /// 取消收藏收藏夹
         /// </summary>
         /// <returns></returns>
         public ApiModel CacnelCollectFavorite(string media_id)
         {
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&media_id={media_id}"
+            ApiParameter body = new ApiParameter
+            {
+                { "media_id", media_id }
+            } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true);
 
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/unfav",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&media_id={media_id}"
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidKey).ToString();
             return api;
         }
 
@@ -119,13 +156,21 @@ namespace BiliLite.Api.User
         /// <returns></returns>
         public ApiModel CreateFavorite(string title,string intro, bool isOpen)
         {
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"privacy={(isOpen ? 0 : 1)}&title={Uri.EscapeDataString(title)}&intro={Uri.EscapeDataString(intro)}"
+            ApiParameter body = new ApiParameter
+            {
+                { "privacy", (isOpen ? 0 : 1).ToString() },
+                { "title", Uri.EscapeDataString(title) },
+                { "intro", Uri.EscapeDataString(intro) }
+            } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true);
+
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/add",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"privacy={(isOpen ? 0 : 1)}&title={Uri.EscapeDataString(title)}&intro={Uri.EscapeDataString(intro)}"
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidKey).ToString();
             return api;
         }
         /// <summary>
@@ -136,15 +181,24 @@ namespace BiliLite.Api.User
         /// <param name="isOpen">是否私密</param>
         /// <param name="media_id">收藏夹ID</param>
         /// <returns></returns>
-        public ApiModel EditFavorite(string title, string intro, bool isOpen,string media_id)
+        public ApiModel EditFavorite(string title, string intro, bool isOpen, string media_id)
         {
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"privacy={(isOpen ? 0 : 1)}&title={Uri.EscapeDataString(title)}&intro={Uri.EscapeDataString(intro)}&media_id={media_id}"
+            ApiParameter body = new ApiParameter
+            {
+                { "privacy", (isOpen ? 0 : 1).ToString() },
+                { "title", Uri.EscapeDataString(title) },
+                { "intro", Uri.EscapeDataString(intro) },
+                { "media_id", media_id }
+            } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true);
+
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/edit",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"privacy={(isOpen ? 0 : 1)}&title={Uri.EscapeDataString(title)}&intro={Uri.EscapeDataString(intro)}&media_id={media_id}"
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidKey).ToString();
             return api;
         }
 
@@ -155,13 +209,19 @@ namespace BiliLite.Api.User
         /// <returns></returns>
         public ApiModel DelFavorite(string media_id)
         {
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&media_ids={media_id}"
+            ApiParameter body = new ApiParameter
+            {
+                { "media_ids", media_id }
+            } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true);
+
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/folder/del",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&media_ids={media_id}"
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidKey).ToString();
             return api;
         }
 
@@ -171,22 +231,38 @@ namespace BiliLite.Api.User
         /// <returns></returns>
         public ApiModel FavoriteInfo(string fid, string keyword, int page = 1)
         {
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&media_id={fid}&mid={SettingHelper.Account.UserID}&keyword={Uri.EscapeDataString(keyword)}&pn={page}&ps=20"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/list",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&media_id={fid}&mid={SettingHelper.Account.UserID}&keyword={Uri.EscapeDataString(keyword)}&pn={page}&ps=20"
+                parameter = new ApiParameter
+                {
+                    { "media_id" ,fid },
+                    { "mid", SettingHelper.Account.UserID.ToString() },
+                    { "keyword", Uri.EscapeDataString(keyword) },
+                    { "pn", page.ToString() },
+                    { "ps", "20" }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
             };
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
         public ApiModel FavoriteSeasonInfo(string season_id, string keyword, int page = 1)
         {
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&season_id={season_id}&mid={SettingHelper.Account.UserID}&keyword={Uri.EscapeDataString(keyword)}&pn={page}&ps=20"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/fav/season/list",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&season_id={season_id}&mid={SettingHelper.Account.UserID}&keyword={Uri.EscapeDataString(keyword)}&pn={page}&ps=20"
+                parameter = new ApiParameter
+                {
+                    { "season_id", season_id },
+                    { "mid", SettingHelper.Account.UserID.ToString() },
+                    { "keyword", Uri.EscapeDataString(keyword) },
+                    { "pn", page.ToString() },
+                    { "ps", "20" }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
             };
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
@@ -204,13 +280,20 @@ namespace BiliLite.Api.User
                 ids += $"{item}:2,";
             }
             ids = Uri.EscapeDataString(ids.TrimEnd(','));
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&media_id={media_id}&resources={ids}"
+            ApiParameter body = new ApiParameter
+            {
+                { "media_id", media_id },
+                { "resources", ids }
+            } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true);
+
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/batch-del",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&media_id={media_id}&resources={ids}"
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidKey).ToString();
             return api;
         }
         /// <summary>
@@ -225,13 +308,22 @@ namespace BiliLite.Api.User
                 ids += $"{item}:2,";
             }
             ids = Uri.EscapeDataString(ids.TrimEnd(','));
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&src_media_id={src_media_id}&tar_media_id={tar_media_id}&resources={ids}&mid={mid}"
+            ApiParameter body = new ApiParameter
+            {
+                { "src_media_id", src_media_id },
+                { "tar_media_id", tar_media_id },
+                { "resources", ids },
+                { "mid", mid }
+            } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true);
+
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/copy",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&src_media_id={src_media_id}&tar_media_id={tar_media_id}&resources={ids}&mid={mid}"
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidKey).ToString();
             return api;
         }
         /// <summary>
@@ -246,13 +338,21 @@ namespace BiliLite.Api.User
                 ids += $"{item}:2,";
             }
             ids = Uri.EscapeDataString(ids.TrimEnd(','));
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&src_media_id={src_media_id}&tar_media_id={tar_media_id}&resources={ids}"
+            ApiParameter body = new ApiParameter
+            {
+                { "src_media_id", src_media_id },
+                { "tar_media_id", tar_media_id },
+                { "resources", ids },
+            } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true);
+
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/move",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&src_media_id={src_media_id}&tar_media_id={tar_media_id}&resources={ids}"
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidKey).ToString();
             return api;
         }
         /// <summary>
@@ -261,13 +361,19 @@ namespace BiliLite.Api.User
         /// <returns></returns>
         public ApiModel Clean(string media_id)
         {
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&media_id={media_id}"
+            ApiParameter body = new ApiParameter
+            {
+                { "media_id", media_id }
+            } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true);
+
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v3/fav/resource/clean",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&media_id={media_id}"
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidKey).ToString();
             return api;
         }
     }
