@@ -19,11 +19,16 @@ namespace BiliLite.Api.Home
         }
         public ApiModel CinemaFallMore(int wid, long cursor = 0)
         {
+            //$"wid={wid}&cursor={cursor}"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.IL_BASE_URL}/api/cinema/falls",
-                parameter = $"wid={wid}&cursor={cursor}"
+                parameter = new ApiParameter
+                {
+                    { "wid", wid.ToString() },
+                    { "cursor", cursor.ToString() }
+                }
             };
             return api;
         }

@@ -31,25 +31,32 @@ namespace BiliLite.Api.Home
         }
         public ApiModel Timeline(int type)
         {
+            //"type="+ type
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.IL_BASE_URL}/api/anime/timeline",
-                parameter="type="+ type
+                parameter = new ApiParameter
+                {
+                    { "type", type.ToString() }
+                }
             };
             return api;
         }
         public ApiModel AnimeFallMore(int wid, long cursor = 0)
         {
+            //$"wid={wid}&cursor={cursor}"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.IL_BASE_URL}/api/anime/bangumiFalls",
-                parameter= $"wid={wid}&cursor={cursor}"
+                parameter = new ApiParameter
+                {
+                    { "wid", wid.ToString() },
+                    { "cursor", cursor.ToString() }
+                }
             };
             return api;
         }
-
-       
     }
 }
