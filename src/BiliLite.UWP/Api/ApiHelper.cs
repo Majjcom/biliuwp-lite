@@ -196,9 +196,9 @@ namespace BiliLite.Api
 
         private string caculate_parameter()
         {
-            ApiParameter p = WbiHelper.EncodeWbi(parameter);
+            //ApiParameter p = WbiHelper.EncodeWbi(parameter);
 
-            return p.ToString();
+            return parameter.ToString();
         }
     }
 }
