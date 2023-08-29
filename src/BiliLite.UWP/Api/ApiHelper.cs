@@ -169,7 +169,7 @@ namespace BiliLite.Api
         /// <summary>
         /// Url参数
         /// </summary>
-        public ApiParameter parameter { get; set; }
+        public ApiParameter parameter { get; set; } = new ApiParameter();
         /// <summary>
         /// 发送内容体，用于POST方法
         /// </summary>
