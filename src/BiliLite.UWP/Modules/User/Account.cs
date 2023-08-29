@@ -467,6 +467,7 @@ namespace BiliLite.Modules
                 if (req.status)
                 {
                     var obj = req.GetJObject();
+                    await this.GetProfile();
                     return obj["code"].ToInt32() == 0;
                 }
                 else

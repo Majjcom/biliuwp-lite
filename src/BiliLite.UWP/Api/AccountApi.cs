@@ -155,7 +155,8 @@ namespace BiliLite.Api
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
-                baseUrl = "https://app.bilibili.com/x/v2/account/myinfo",
+                //baseUrl = "https://app.bilibili.com/x/v2/account/myinfo",
+                baseUrl = "https://api.bilibili.com/x/space/myinfo",
                 parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey,true)
             };
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);

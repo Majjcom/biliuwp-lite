@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using ApiParameter = System.Collections.Generic.Dictionary<string, string>;
+
 namespace BiliLite.Api
 {
     public static class ApiHelper
@@ -31,6 +33,7 @@ namespace BiliLite.Api
         private const string _mobi_app = "android";
         private const string _platform = "android";
         public static string deviceId = "";
+        
         public static string GetSign(string url, ApiKeyInfo apiKeyInfo, string par = "&sign=")
         {
             string result;
@@ -90,6 +93,9 @@ namespace BiliLite.Api
         }
 
     }
+    
+    
+
     public class ApiKeyInfo
     {
         public ApiKeyInfo(string key, string secret)
@@ -100,6 +106,7 @@ namespace BiliLite.Api
         public string Appkey { get; set; }
         public string Secret { get; set; }
     }
+    
     public class ApiModel
     {
         /// <summary>

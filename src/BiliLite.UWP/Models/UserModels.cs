@@ -108,7 +108,10 @@ namespace BiliLite.Models
         /// <summary>
         /// 1997-09-21
         /// </summary>
-        public DateTime birthday { get; set; }
+        public long birthday { get; set; }
+
+
+
         private string _face;
 
         public string face
@@ -130,7 +133,7 @@ namespace BiliLite.Models
         /// <summary>
         /// Sex
         /// </summary>
-        public int sex { get; set; }
+        public string sex { get; set; }
         /// <summary>
         /// Level
         /// </summary>
@@ -159,25 +162,10 @@ namespace BiliLite.Models
         /// Official
         /// </summary>
         public Official official { get; set; }
-
-
-        public string Sex
-        {
-            get
-            {
-                switch (sex)
-                {
-                    case 0:
-                        return "保密";
-                    case 1:
-                        return "男";
-                    case 2:
-                        return "女";
-                    default:
-                        return "保密";
-                }
-            }
-        }
+        /// <summary>
+        /// Sex
+        /// </summary>
+        public string Sex { get; set; }
     }
 
     public class Vip

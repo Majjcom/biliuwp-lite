@@ -18,7 +18,7 @@ namespace BiliLite.Api.User
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
-                baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/acc/info",
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/myinfo",
                 parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey,needAccesskey:true)+$"&mid={mid}",
             };
 

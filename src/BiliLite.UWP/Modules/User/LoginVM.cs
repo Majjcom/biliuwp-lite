@@ -526,12 +526,13 @@ namespace BiliLite.Modules.User
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
                 var result = await account.PollQRAuthInfo(qrAuthInfo.auth_code);
-                  if (result.status == LoginStatus.Success)
-                  {
-                      qrTimer.Stop();
+                if (result.status == LoginStatus.Success)
+                {
+                    qrTimer.Stop();
+                    
                     CloseDialog?.Invoke(this, null);
-                  }
-              });
+                }
+            });
         }
 
         #endregion
