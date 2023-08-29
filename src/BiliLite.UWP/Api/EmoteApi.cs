@@ -28,8 +28,12 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/emote/user/panel/web",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&business={type}"
+                parameter = new ApiParameter
+                {
+                    { "business", type }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
             };
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&business={type}"
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
