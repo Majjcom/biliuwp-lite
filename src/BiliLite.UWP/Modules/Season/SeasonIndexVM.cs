@@ -178,12 +178,20 @@ namespace BiliLite.Modules
                     }
                 }
                 Loading = true;
-                var con = "";
+                ApiParameter con = new ApiParameter();
                 foreach (var item in Conditions)
                 {
-                    con += $"&{item.field}={Uri.EscapeDataString(item.current.keyword)}";
+                    //$"&{item.field}={Uri.EscapeDataString(item.current.keyword)}";
+                    con += new ApiParameter
+                    {
+                        { item.field, Uri.EscapeDataString(item.current.keyword) }
+                    };
                 }
-                con += $"&sort=0";
+                //$"&sort=0";
+                con += new ApiParameter
+                {
+                    { "sort", "0" }
+                };
                 var results = await seasonIndexAPI.Result(Page, (int)Parameter.type, con).Request();
                 if (results.status)
                 {

@@ -15,11 +15,16 @@ namespace BiliLite.Api
         /// <returns></returns>
         public ApiModel Condition(int season_type)
         {
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + $"&season_type={season_type}&type=0"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/season/index/condition",//$"https://bangumi.bilibili.com/media/api/search/v2/condition",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + $"&season_type={season_type}&type=0"
+                parameter = new ApiParameter
+                {
+                    { "season_type", season_type.ToString() },
+                    { "type", "0" }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, false)
             };
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
@@ -33,13 +38,20 @@ namespace BiliLite.Api
         /// <param name="condition">拼接的条件,&par1=1&par2=2</param>
         /// <param name="pagesize">页数</param>
         /// <returns></returns>
-        public ApiModel Result(int page,int season_type,string condition,int pagesize=24)
+        public ApiModel Result(int page, int season_type, ApiParameter condition, int pagesize = 24)
         {
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + condition + $"&page={page}&pagesize={pagesize}&season_type={season_type}&type=0"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/season/index/result",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, false) + condition+ $"&page={page}&pagesize={pagesize}&season_type={season_type}&type=0"
+                parameter = new ApiParameter
+                {
+                    { "page", page.ToString() },
+                    { "pagesize", pagesize.ToString() },
+                    { "season_type", season_type.ToString() },
+                    { "type", "0" },
+                } + condition + ApiHelper.MustParameter(ApiHelper.AndroidKey, false)
             };
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
