@@ -22,17 +22,36 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{baseUrl}/x/player/playurl",
-                parameter = ApiHelper.MustParameter(ApiHelper.WebVideoKey, true) + $"&avid={aid}&cid={cid}&qn={qn}&type=&otype=json&mid={(SettingHelper.Account.Logined? SettingHelper.Account.Profile.mid.ToString():"")}"
+                parameter = new ApiParameter
+                {
+                    { "avid", aid },
+                    { "cid", cid },
+                    { "qn", qn.ToString() },
+                    { "type", "" },
+                    { "otype", "json" },
+                    { "mid", SettingHelper.Account.Logined ? SettingHelper.Account.Profile.mid.ToString() : "" }
+                } + ApiHelper.MustParameter(ApiHelper.WebVideoKey, true)
             };
+            //ApiHelper.MustParameter(ApiHelper.WebVideoKey, true) + $"&avid={aid}&cid={cid}&qn={qn}&type=&otype=json&mid={(SettingHelper.Account.Logined? SettingHelper.Account.Profile.mid.ToString():"")}"
             if (dash)
             {
-                api.parameter += "&fourk=1&fnver=0&fnval=4048";
+                api.parameter += new ApiParameter
+                {
+                    { "fourk", "1" },
+                    { "fnver", "0" },
+                    { "fnval", "4048" }
+                };
+                //"&fourk=1&fnver=0&fnval=4048"
             }
-           
+
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.WebVideoKey);
             if (proxy)
             {
-                api.parameter += $"&area={area}";
+                api.parameter += new ApiParameter
+                {
+                    { "area", area }
+                };
+                //$"&area={area}"
             }
             return api;
         }
@@ -50,21 +69,47 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{baseUrl}/pgc/player/web/playurl",
-                parameter = $"appkey={ApiHelper.WebVideoKey.Appkey}&cid={cid}&ep_id={ep_id}&qn={qn}&type=&otype=json&module=bangumi&season_type={season_type}"
+                parameter = new ApiParameter
+                {
+                    { "appkey", ApiHelper.WebVideoKey.Appkey },
+                    { "cid", cid },
+                    { "ep_id", ep_id },
+                    { "qn", qn.ToString() },
+                    { "type", "" },
+                    { "otype", "json" },
+                    { "module", "bangumi" },
+                    { "season_type", season_type.ToString() }
+                }
             };
+            //$"appkey={ApiHelper.WebVideoKey.Appkey}&cid={cid}&ep_id={ep_id}&qn={qn}&type=&otype=json&module=bangumi&season_type={season_type}"
             if (SettingHelper.Account.Logined)
             {
-                api.parameter += $"&access_key={SettingHelper.Account.AccessKey}&mid={SettingHelper.Account.Profile.mid}";
+                api.parameter += new ApiParameter
+                {
+                    { "access_key", SettingHelper.Account.AccessKey },
+                    { "mid", SettingHelper.Account.Profile.mid.ToString() }
+                };
+                //$"&access_key={SettingHelper.Account.AccessKey}&mid={SettingHelper.Account.Profile.mid}"
             }
             if (dash)
             {
-                api.parameter += "&fourk=1&fnver=0&fnval=4048";
+                api.parameter += new ApiParameter
+                {
+                    { "fourk", "1" },
+                    { "fnver", "0" },
+                    { "fnval", "4048" }
+                };
+                //"&fourk=1&fnver=0&fnval=4048"
             }
-            
+
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.WebVideoKey);
             if (proxy)
             {
-                api.parameter += $"&area={area}";
+                api.parameter += new ApiParameter
+                {
+                    { "area", area }
+                };
+                //$"&area={area}"
             }
             return api;
         }
@@ -74,15 +119,36 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/pgc/player/web/playurl",
-                parameter = $"appkey={ApiHelper.AndroidKey.Appkey}&cid={cid}&qn={qn}&type=&otype=json&module=bangumi&season_type={season_type}"
+                parameter = new ApiParameter
+                {
+                    { "appkey", ApiHelper.AndroidKey.Appkey },
+                    { "cid", cid },
+                    { "qn", qn.ToString() },
+                    { "type", "" },
+                    { "otype", "json" },
+                    { "module", "bangumi" },
+                    { "season_type", season_type.ToString() }
+                }
             };
+            //$"appkey={ApiHelper.AndroidKey.Appkey}&cid={cid}&qn={qn}&type=&otype=json&module=bangumi&season_type={season_type}"
             if (SettingHelper.Account.Logined)
             {
-                api.parameter += $"&access_key={SettingHelper.Account.AccessKey}&mid={SettingHelper.Account.Profile.mid}";
+                api.parameter += new ApiParameter
+                {
+                    { "access_key", SettingHelper.Account.AccessKey },
+                    { "mid", SettingHelper.Account.Profile.mid.ToString() }
+                };
+                //$"&access_key={SettingHelper.Account.AccessKey}&mid={SettingHelper.Account.Profile.mid}"
             }
             if (dash)
             {
-                api.parameter += "&fourk=1&fnver=0&fnval=4048";
+                api.parameter += new ApiParameter
+                {
+                    { "fourk", "1" },
+                    { "fnver", "0" },
+                    { "fnval", "4048" }
+                };
+                //"&fourk=1&fnver=0&fnval=4048"
             }
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.WebVideoKey);
             return api;
@@ -94,8 +160,14 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://api.live.bilibili.com/room/v1/Room/playUrl",
-                parameter =$"cid={cid}&qn={qn}&platform=web"
+                parameter = new ApiParameter
+                {
+                    { "cid", cid },
+                    { "qn", qn.ToString() },
+                    { "platform", "web" }
+                }
             };
+            //$"cid={cid}&qn={qn}&platform=web"
             //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidVideoKey);
             return api;
         }
@@ -113,8 +185,14 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/stein/edgeinfo_v2",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&aid={aid}&graph_version={graph_version}&edge_id={edge_id}"
+                parameter = new ApiParameter
+                {
+                    { "aid", aid },
+                    { "graph_version", graph_version.ToString() },
+                    { "edge_id", edge_id.ToString() }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
             };
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&aid={aid}&graph_version={graph_version}&edge_id={edge_id}"
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
@@ -131,13 +209,26 @@ namespace BiliLite.Api
         /// <returns></returns>
         public ApiModel SeasonHistoryReport(string aid,string cid, int progress, int sid=0,string epid="0",int type=3)
         {
+            ApiParameter body = new ApiParameter
+            {
+                { "aid", aid },
+                { "cid", cid },
+                { "epid", epid },
+                { "sid", sid.ToString() },
+                { "progress", progress.ToString() },
+                { "realtime", progress.ToString() },
+                { "sub_type", "1" },
+                { "type", type.ToString() }
+            } + ApiHelper.MustParameter(ApiHelper.AndroidVideoKey, true);
+
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/history/report",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidVideoKey, true) + $"&aid={aid}&cid={cid}&epid={epid}&sid={sid}&progress={progress}&realtime={progress}&sub_type=1&type={type}"
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidVideoKey);
+            //$"&aid={aid}&cid={cid}&epid={epid}&sid={sid}&progress={progress}&realtime={progress}&sub_type=1&type={type}" + ApiHelper.MustParameter(ApiHelper.AndroidVideoKey, true)
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidVideoKey).ToString();
             return api;
         }
        /// <summary>
@@ -157,9 +248,28 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/v2/dm/post",
-                parameter= ApiHelper.MustParameter(ApiHelper.AndroidVideoKey, true)+$"&aid={aid}",
-                body =   $"msg={Uri.EscapeDataString(msg)}&mode={mode}&screen_state=1&color={color}&pool=0&progress={Convert.ToInt32(position*1000)}&fontsize=25&rnd={Utils.GetTimestampS()}&from=7&oid={cid}&plat={plat}&type=1"
+                parameter = new ApiParameter
+                {
+                    { "aid", aid }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidVideoKey, true),
+                body = new ApiParameter
+                {
+                    { "msg", Uri.EscapeDataString(msg) },
+                    { "mode", mode.ToString() },
+                    { "screen_state", "1" },
+                    { "color", color },
+                    { "pool", "0" },
+                    { "progress", Convert.ToInt32(position * 1000).ToString() },
+                    { "fontsize", "25" },
+                    { "rnd", Utils.GetTimestampS().ToString() },
+                    { "from", "7" },
+                    { "cid", cid },         // oid ??
+                    { "plat", plat.ToString() },
+                    { "type", "1" }
+                }.ToString()
             };
+            //ApiHelper.MustParameter(ApiHelper.AndroidVideoKey, true) + $"&aid={aid}"
+            //$"msg={Uri.EscapeDataString(msg)}&mode={mode}&screen_state=1&color={color}&pool=0&progress={Convert.ToInt32(position * 1000)}&fontsize=25&rnd={Utils.GetTimestampS()}&from=7&oid={cid}&plat={plat}&type=1"
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidVideoKey);
             return api;
         }
@@ -175,8 +285,14 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/player/v2",
-                parameter = $"cid={cid}&aid={aid}&bvid={bvid}",
+                parameter = new ApiParameter
+                {
+                    { "cid", cid },
+                    { "aid", aid },
+                    { "bvid", bvid }
+                }
             };
+            //$"cid={cid}&aid={aid}&bvid={bvid}",
             return api;
         }
         /// <summary>
@@ -191,8 +307,14 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/player/online/total",
-                parameter = $"cid={cid}&aid={aid}&bvid={bvid}",
+                parameter = new ApiParameter
+                {
+                    { "cid", cid },
+                    { "aid", aid },
+                    { "bvid", bvid }
+                }
             };
+            //$"cid={cid}&aid={aid}&bvid={bvid}",
             return api;
         }
 
@@ -223,9 +345,14 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Post,
                 baseUrl = $"{ApiHelper.API_BASE_URL}/x/dm/filter/user/add",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidVideoKey, true)+ $"&filter={Uri.EscapeDataString(word)}&type={type}"
+                body = new ApiParameter
+                {
+                    { "filter", Uri.EscapeDataString(word) },
+                    { "type", type.ToString() }
+                }.ToString()
             };
-            api.body += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidVideoKey);
+            //ApiHelper.MustParameter(ApiHelper.AndroidVideoKey, true) + $"&filter={Uri.EscapeDataString(word)}&type={type}"
+            api.body += '&' + ApiHelper.GetSign(api.parameter, ApiHelper.AndroidVideoKey).ToString();
             return api;
         }
         /// <summary>
@@ -240,8 +367,14 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"http://api.bilibili.com/x/v2/dm/list/seg.so",
-                parameter = $"type=1&oid={oid}&segment_index={segment_index}"
+                parameter = new ApiParameter
+                {
+                    { "type", "1" },
+                    { "oid", oid },
+                    { "segment_index", segment_index.ToString() }
+                }
             };
+            //$"type=1&oid={oid}&segment_index={segment_index}"
             return api;
         }
 
