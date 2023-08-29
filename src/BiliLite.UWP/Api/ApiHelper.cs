@@ -5,13 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-//using ApiParameter = System.Collections.Generic.Dictionary<string, string>;
+using ApiParameterPri = System.Collections.Generic.Dictionary<string, string>;
 
 namespace BiliLite.Api
 {
     public class ApiParameter : System.Collections.Generic.Dictionary<string, string>
     {
         public ApiParameter(): base()
+        {
+        }
+
+        public ApiParameter(IDictionary<string, string> dic): base(dic)
         {
         }
 
@@ -31,14 +35,14 @@ namespace BiliLite.Api
             return ret;
         }
 
-        public ApiParameter Concat(ApiParameter other)
-        {
-            return this.Concat(other);
-        }
+        //public ApiParameter Concat(ApiParameter other)
+        //{
+        //    return this.Concat(other);
+        //}
 
         public static ApiParameter operator +(ApiParameter first ,ApiParameter second)
         {
-            return first.Concat(second);
+            return new ApiParameter(first.Concat(second).ToDictionary(pair => pair.Key, pair => pair.Value));
         }
     }
 
