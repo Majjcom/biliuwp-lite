@@ -330,13 +330,21 @@ namespace BiliLite.Api
         /// <returns></returns>
         public ApiModel QRLoginPoll(string auth_code, string local_id)
         {
+            ApiParameter body = new ApiParameter
+            {
+                { "auth_code", auth_code },
+                { "guid", Guid.NewGuid().ToString() },
+                { "local_id", local_id }
+            } + ApiHelper.MustParameter(ApiHelper.AndroidTVKey, false);
+
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = "https://passport.bilibili.com/x/passport-tv-login/qrcode/poll",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidTVKey, false) + $"&auth_code={auth_code}&guid={Guid.NewGuid().ToString()}&local_id={local_id}",
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidTVKey);
+            //$"&auth_code={auth_code}&guid={Guid.NewGuid().ToString()}&local_id={local_id}"
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidTVKey).ToString();
             return api;
         }
 
@@ -351,8 +359,12 @@ namespace BiliLite.Api
             {
                 method = RestSharp.Method.Get,
                 baseUrl = "https://passport.bilibili.com/api/oauth2/info",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey)+ "&access_token="+SettingHelper.Account.AccessKey
+                parameter = new ApiParameter
+                {
+                    { "access_token", SettingHelper.Account.AccessKey }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey)
             };
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey)+ "&access_token="+SettingHelper.Account.AccessKey
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
@@ -363,13 +375,20 @@ namespace BiliLite.Api
         /// <returns></returns>
         public ApiModel RefreshToken()
         {
+            ApiParameter body = new ApiParameter
+            {
+                { "access_token", SettingHelper.Account.AccessKey },
+                { "refresh_token", SettingHelper.GetValue<string>(SettingHelper.Account.REFRESH_KEY, "") },
+            } + ApiHelper.MustParameter(ApiHelper.AndroidKey);
+
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Post,
                 baseUrl = "https://passport.bilibili.com/api/oauth2/refreshToken",
-                body = ApiHelper.MustParameter(ApiHelper.AndroidKey)+ $"&access_token={SettingHelper.Account.AccessKey}&refresh_token={SettingHelper.GetValue<string>(SettingHelper.Account.REFRESH_KEY, "")}"
+                body = body.ToString()
             };
-            api.body += ApiHelper.GetSign(api.body, ApiHelper.AndroidKey);
+            //$"&access_token={SettingHelper.Account.AccessKey}&refresh_token={SettingHelper.GetValue<string>(SettingHelper.Account.REFRESH_KEY, "")}"
+            api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidKey).ToString();
             return api;
         }
     }
