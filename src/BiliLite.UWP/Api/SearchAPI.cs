@@ -19,53 +19,102 @@ namespace BiliLite.Api
         /// <param name="pn">页码</param>
         /// <param name="ps">页数</param>
         /// <returns></returns>
-        public ApiModel Search(string keyword,string order="",int duration=0,int rid=0, int pn=1,int ps=20)
+        public ApiModel Search(string keyword, string order="", int duration=0, int rid=0, int pn = 1, int ps = 20)
         {
+            //"&fnval=16&fnver=0&force_host=0&fourk=1&from_source=app_search&highlight=0&is_org_query=0&qn=112&recommend=1" + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 baseUrl = $"https://app.bilibili.com/x/v2/search",
-                parameter = ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + "&fnval=16&fnver=0&force_host=0&fourk=1&from_source=app_search&highlight=0&is_org_query=0&qn=112&recommend=1"
+                parameter = new ApiParameter
+                {
+                    { "fnval", "16" },
+                    { "fnver", "0" },
+                    { "force_host", "0" },
+                    { "fourk", "1" },
+                    { "from_source", "app_search" },
+                    { "highlight", "0" },
+                    { "is_org_query", "0" },
+                    { "qn", "112" },
+                    { "recommend", "1" }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
             };
-            api.parameter += $"&keyword={Uri.EscapeDataString(keyword)}&local_time={Utils.GetTimestampS()}&pn={pn}&ps={ps}";
+            //$"&keyword={Uri.EscapeDataString(keyword)}&local_time={Utils.GetTimestampS()}&pn={pn}&ps={ps}"
+            api.parameter += new ApiParameter
+            {
+                { "keyword", Uri.EscapeDataString(keyword) },
+                { "local_time", Utils.GetTimestampS().ToString() },
+                { "pn", pn.ToString() },
+                { "ps", ps.ToString() }
+            };
             if (string.IsNullOrEmpty(order))
             {
-                api.parameter += $"&order={order}";
+                //$"&order={order}";
+                api.parameter += new ApiParameter
+                {
+                    { "order", order }
+                };
             }
-            if (duration!=0)
+            if (duration != 0)
             {
-                api.parameter += $"&duration={duration}";
+                //$"&duration={duration}";
+                api.parameter += new ApiParameter
+                {
+                    { "duration", duration.ToString() }
+                };
             }
             if (rid != 0)
             {
-                api.parameter += $"&rid={rid}";
+                //$"&rid={rid}";
+                api.parameter += new ApiParameter
+                {
+                    { "rid", rid.ToString() }
+                };
             }
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
-    
-    
 
-        public ApiModel WebSearchVideo(string keyword,int pn=1,string order="",string duration="",string region="0",string area="")
+        public ApiModel WebSearchVideo(string keyword, int pn = 1, string order = "", string duration = "", string region = "0", string area = "")
         {
             var baseUrl = ApiHelper.API_BASE_URL;
             if (!string.IsNullOrEmpty(area))
             {
                 baseUrl = Utils.ChooseProxyServer(area);
             }
+            //$"context=&search_type=video&page={pn}&order={order}&keyword={Uri.EscapeDataString(keyword)}&duration={duration}&category_id=&tids_2=&__refresh__=true&tids={region}&highlight=1&single_column=0"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
                 baseUrl = $"{baseUrl}/x/web-interface/search/type",
-                parameter = $"context=&search_type=video&page={pn}&order={order}&keyword={Uri.EscapeDataString(keyword)}&duration={duration}&category_id=&tids_2=&__refresh__=true&tids={region}&highlight=1&single_column=0"
+                parameter = new ApiParameter
+                {
+                    { "context", "" },
+                    { "search_type", "video" },
+                    { "page", pn.ToString() },
+                    { "order", order },
+                    { "keyword", Uri.EscapeDataString(keyword) },
+                    { "duration", duration },
+                    { "category_id", "" },
+                    { "tids_2", "" },
+                    { "__refresh__", "true" },
+                    { "tids", region },
+                    { "highlight", "1" },
+                    { "single_column", "0" }
+                }
             };
             if (!string.IsNullOrEmpty(area))
             {
-                api.parameter += $"&area={area}";
+                //$"&area={area}";
+                api.parameter += new ApiParameter
+                {
+                    { "area", area }
+                };
             }
             return api;
         }
+
         public ApiModel WebSearchAnime(string keyword, int pn = 1, string area = "")
         {
             var baseUrl = ApiHelper.API_BASE_URL;
@@ -73,16 +122,32 @@ namespace BiliLite.Api
             {
                 baseUrl = Utils.ChooseProxyServer(area);
             }
+            //$"context=&search_type=media_bangumi&page={pn}&order=&keyword={Uri.EscapeDataString(keyword)}&category_id=&__refresh__=true&highlight=1&single_column=0"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
                 baseUrl = $"{baseUrl}/x/web-interface/search/type",
-                parameter = $"context=&search_type=media_bangumi&page={pn}&order=&keyword={Uri.EscapeDataString(keyword)}&category_id=&__refresh__=true&highlight=1&single_column=0"
+                parameter = new ApiParameter
+                {
+                    { "context", "" },
+                    { "search_type", "media_bangumi" },
+                    { "page", pn.ToString() },
+                    { "order", "" },
+                    { "keyword", Uri.EscapeDataString(keyword) },
+                    { "category_id", "" },
+                    { "__refresh__", "true" },
+                    { "highlight", "1" },
+                    { "single_column", "0" }
+                }
             };
             if (!string.IsNullOrEmpty(area))
             {
-                api.parameter += $"&area={area}";
+                //$"&area={area}";
+                api.parameter += new ApiParameter
+                {
+                    { "area", area }
+                };
             }
             return api;
         }
@@ -93,16 +158,32 @@ namespace BiliLite.Api
             {
                 baseUrl = Utils.ChooseProxyServer(area);
             }
+            //$"context=&search_type=media_ft&page={pn}&order=&keyword={Uri.EscapeDataString(keyword)}&category_id=&__refresh__=true&highlight=1&single_column=0"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
                 baseUrl = $"{baseUrl}/x/web-interface/search/type",
-                parameter = $"context=&search_type=media_ft&page={pn}&order=&keyword={Uri.EscapeDataString(keyword)}&category_id=&__refresh__=true&highlight=1&single_column=0"
+                parameter = new ApiParameter
+                {
+                    { "context", "" },
+                    { "search_type", "media_ft" },
+                    { "page", pn.ToString() },
+                    { "order", "" },
+                    { "keyword", Uri.EscapeDataString(keyword) },
+                    { "category_id", "" },
+                    { "__refresh__", "true" },
+                    { "highlight", "1" },
+                    { "single_column", "0" }
+                }
             }; 
             if (!string.IsNullOrEmpty(area))
             {
-                api.parameter += $"&area={area}";
+                //$"&area={area}";
+                api.parameter += new ApiParameter
+                {
+                    { "area", area }
+                };
             }
             return api;
         }
