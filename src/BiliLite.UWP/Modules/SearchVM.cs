@@ -503,18 +503,18 @@ namespace BiliLite.Modules
         public SearchUserVM()
         {
             OrderFilters = new List<SearchFilterItem>() {
-                new SearchFilterItem("默认排序","&order=&order_sort="),
-                new SearchFilterItem("粉丝数由高到低","&order=fans&order_sort=0"),
-                new SearchFilterItem("粉丝数由低到高","&order=fans&order_sort=1"),
-                new SearchFilterItem("LV等级由高到低","&order=level&order_sort=0"),
-                new SearchFilterItem("LV等级由低到高","&order=level&order_sort=1"),
+                new SearchFilterItem("默认排序","&"),
+                new SearchFilterItem("粉丝数由高到低","fans&0"),
+                new SearchFilterItem("粉丝数由低到高","fans&1"),
+                new SearchFilterItem("LV等级由高到低","level&0"),
+                new SearchFilterItem("LV等级由低到高","level&1"),
             };
             SelectOrder = OrderFilters[0];
             TypeFilters = new List<SearchFilterItem>() {
-                new SearchFilterItem("全部用户","&user_type=0"),
-                new SearchFilterItem("UP主","&user_type=1"),
-                new SearchFilterItem("普通用户","&user_type=2"),
-                new SearchFilterItem("认证用户","&user_type=3")
+                new SearchFilterItem("全部用户","0"),
+                new SearchFilterItem("UP主","1"),
+                new SearchFilterItem("普通用户","2"),
+                new SearchFilterItem("认证用户","3")
             };
             SelectType = TypeFilters[0];
 
@@ -556,7 +556,9 @@ namespace BiliLite.Modules
                 ShowLoadMore = false;
                 Loading = true;
                 Nothing = false;
-                var results = await searchAPI.WebSearchUser(Keyword, Page, SelectOrder.value, SelectType.value, Area).Request();
+                string order = SelectOrder.value.Split("&")[0];
+                string sort = SelectOrder.value.Split("&")[1];
+                var results = await searchAPI.WebSearchUser(Keyword, Page, order, sort, SelectType.value, Area).Request();
                 if (results.status)
                 {
                     var data = await results.GetJson<ApiDataModel<JObject>>();

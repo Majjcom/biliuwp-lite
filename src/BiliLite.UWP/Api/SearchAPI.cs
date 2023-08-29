@@ -187,23 +187,42 @@ namespace BiliLite.Api
             }
             return api;
         }
-        public ApiModel WebSearchUser(string keyword, int pn = 1, string order = "&order=&order_sort=", string type = "&user_type=", string area = "")
+        public ApiModel WebSearchUser(string keyword, int pn = 1, string order = "", string sort = "", string type = "", string area = "")
         {
             var baseUrl = ApiHelper.API_BASE_URL;
             if (!string.IsNullOrEmpty(area))
             {
                 baseUrl = Utils.ChooseProxyServer(area);
             }
+            //$"context=&search_type=bili_user&page={pn}&keyword={Uri.EscapeDataString(keyword)}&oeder={order}&order_sort={sort}&user_type={type}&__refresh__=true&changing=mid&highlight=1&single_column=0&category_id="
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
                 baseUrl = $"{baseUrl}/x/web-interface/search/type",
-                parameter = $"context=&search_type=bili_user&page={pn}&keyword={Uri.EscapeDataString(keyword)}{order}{type}&__refresh__=true&changing=mid&highlight=1&single_column=0&category_id="
+                parameter = new ApiParameter
+                {
+                    { "context", "" },
+                    { "search_type", "bili_user" },
+                    { "page", pn.ToString() },
+                    { "keyword", Uri.EscapeDataString(keyword) },
+                    { "oeder", order },
+                    { "order_sort", sort },
+                    { "user_type", type },
+                    { "__refresh__", "true" },
+                    { "changing", "mid" },
+                    { "highlight", "1" },
+                    { "single_column", "0" },
+                    { "category_id", "" }
+                }
             };
             if (!string.IsNullOrEmpty(area))
             {
-                api.parameter += $"&area={area}";
+                //$"&area={area}";
+                api.parameter += new ApiParameter
+                {
+                    { "area", area }
+                };
             }
             return api;
         }
@@ -214,16 +233,32 @@ namespace BiliLite.Api
             {
                 baseUrl = Utils.ChooseProxyServer(area);
             }
+            //$"context=&search_type=live&cover_type=user_cover&page={pn}&keyword={Uri.EscapeDataString(keyword)}&__refresh__=true&changing=mid&highlight=1&single_column=0"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
                 baseUrl = $"{baseUrl}/x/web-interface/search/type",
-                parameter = $"context=&search_type=live&cover_type=user_cover&page={pn}&keyword={Uri.EscapeDataString(keyword)}&__refresh__=true&changing=mid&highlight=1&single_column=0"
+                parameter = new ApiParameter
+                {
+                    { "context", "" },
+                    { "search_type", "live" },
+                    { "cover_type", "user_cover" },
+                    { "page", pn.ToString() },
+                    { "keyword", Uri.EscapeDataString(keyword) },
+                    { "__refresh__", "true" },
+                    { "changing", "mid" },
+                    { "highlight", "1" },
+                    { "single_column", "0" }
+                }
             };
             if (!string.IsNullOrEmpty(area))
             {
-                api.parameter += $"&area={area}";
+                //$"&area={area}";
+                api.parameter += new ApiParameter
+                {
+                    { "area", area }
+                };
             }
             return api;
         }
@@ -234,16 +269,32 @@ namespace BiliLite.Api
             {
                 baseUrl = Utils.ChooseProxyServer(area);
             }
+            //$"context=&search_type=article&page={pn}&order={order}&keyword={Uri.EscapeDataString(keyword)}&category_id={region}&__refresh__=true&highlight=1&single_column=0"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
                 baseUrl = $"{baseUrl}/x/web-interface/search/type",
-                parameter = $"context=&search_type=article&page={pn}&order={order}&keyword={Uri.EscapeDataString(keyword)}&category_id={region}&__refresh__=true&highlight=1&single_column=0"
+                parameter = new ApiParameter
+                {
+                    { "context", "" },
+                    { "search_type", "article" },
+                    { "page", pn.ToString() },
+                    { "order", order },
+                    { "keyword", Uri.EscapeDataString(keyword) },
+                    { "category_id", region },
+                    { "__refresh__", "true" },
+                    { "highlight", "1" },
+                    { "single_column", "0" }
+                }
             };
             if (!string.IsNullOrEmpty(area))
             {
-                api.parameter += $"&area={area}";
+                //$"&area={area}";
+                api.parameter += new ApiParameter
+                {
+                    { "area", area }
+                };
             }
             return api;
         }
@@ -254,16 +305,32 @@ namespace BiliLite.Api
             {
                 baseUrl = Utils.ChooseProxyServer(area);
             }
+            //$"context=&search_type=topic&page={pn}&order=&keyword={Uri.EscapeDataString(keyword)}&category_id=&__refresh__=true&highlight=1&single_column=0"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
                 need_cookie = true,
                 baseUrl = $"{baseUrl}/x/web-interface/search/type",
-                parameter = $"context=&search_type=topic&page={pn}&order=&keyword={Uri.EscapeDataString(keyword)}&category_id=&__refresh__=true&highlight=1&single_column=0"
+                parameter = new ApiParameter
+                {
+                    { "context", "" },
+                    { "search_type", "topic" },
+                    { "page", pn.ToString() },
+                    { "order", "" },
+                    { "keyword", Uri.EscapeDataString(keyword) },
+                    { "category_id", "" },
+                    { "__refresh__", "true" },
+                    { "highlight", "1" },
+                    { "single_column", "0" }
+                }
             };
             if (!string.IsNullOrEmpty(area))
             {
-                api.parameter += $"&area={area}";
+                //$"&area={area}";
+                api.parameter += new ApiParameter
+                {
+                    { "area", area }
+                };
             }
             return api;
         }
