@@ -67,9 +67,9 @@ namespace BiliLite.Api.User
                     { "type", "2" },
                     { "pn", "1" },
                     { "ps", "100" }
-                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
+                } + ApiHelper.MustParameter(ApiHelper.AndroidTVKey, true)
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidTVKey);
             return api;
         }
 

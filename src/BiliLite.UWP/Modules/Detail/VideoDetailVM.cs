@@ -186,11 +186,18 @@ namespace BiliLite.Modules
                     return;
                 }
 
+                
+                List<VideoDetailRelatesModel> relates = await LoadRecommend(data.data.bvid);
+                if (relates != null)
+                {
+                    data.data.relates = relates;
+                }
+
                 VideoInfo = data.data;
                 Loaded = true;
                 _videoUrl = $"https://www.bilibili.com/video/{VideoInfo.bvid}";
 
-                await LoadRecommend(data.data.bvid);
+                
                 await LoadFavorite(data.data.aid);
             }
             catch (Exception ex)
@@ -206,15 +213,13 @@ namespace BiliLite.Modules
             }
         }
 
-        public List<VideoDetailRelatesModel> Relates { set; get; }
-
-        public async Task LoadRecommend(string bvid)
+        public async Task<List<VideoDetailRelatesModel>> LoadRecommend(string bvid)
         {
             var resault = await videoAPI.Recommend(bvid, true).Request();
             if (!resault.status)
             {
                 Utils.ShowMessageToast($"加载视频推荐失败：{resault.message}");
-                return;
+                return null;
             }
 
             var data = await resault.GetJson<ApiDataModel<List<VideoDetailRelatesModel>>>();
@@ -222,10 +227,10 @@ namespace BiliLite.Modules
             {
                 Utils.ShowMessageToast("解析视频推荐失败，错误信息写入日志");
                 LogHelper.Log($"解析JSON出现问题：{resault.results}", LogType.ERROR);
-                return;
+                return null;
             }
 
-            Relates = data.data;
+            return data.data;
         }
 
         public void Refresh()
