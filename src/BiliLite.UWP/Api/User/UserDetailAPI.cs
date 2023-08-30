@@ -44,9 +44,9 @@ namespace BiliLite.Api.User
                 parameter = new ApiParameter
                 {
                     { "vmid", mid }
-                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
+                } + ApiHelper.MustParameter(ApiHelper.AndroidTVKey, true)
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidTVKey);
             return api;
         }
 
@@ -78,13 +78,14 @@ namespace BiliLite.Api.User
         /// <param name="page">页数</param>
         /// <param name="pagesize">每页数量</param>
         /// <returns></returns>
-        public ApiModel SubmitVideos(string mid, int page = 1, int pagesize = 30, string keyword = "", int tid=0, SubmitVideoOrder order = SubmitVideoOrder.pubdate)
+        public ApiModel SubmitVideos(string mid, int page = 1, int pagesize = 20, string keyword = "", int tid=0, SubmitVideoOrder order = SubmitVideoOrder.pubdate)
         {
             //$"mid={mid}&ps={pagesize}&tid={tid}&pn={page}&keyword={keyword}&order={order.ToString()}",
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
-                baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/arc/search",
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/space/wbi/arc/search",
+                need_wbi = true,
                 parameter = new ApiParameter
                 {
                     { "mid", mid },

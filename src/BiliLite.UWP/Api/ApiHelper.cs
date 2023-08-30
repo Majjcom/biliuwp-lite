@@ -166,26 +166,36 @@ namespace BiliLite.Api
         /// 请求方法
         /// </summary>
         public RestSharp.Method method { get; set; }
+        
         /// <summary>
         /// API地址
         /// </summary>
         public string baseUrl { get; set; }
+        
         /// <summary>
         /// Url参数
         /// </summary>
         public ApiParameter parameter { get; set; } = new ApiParameter();
+        
         /// <summary>
         /// 发送内容体，用于POST方法
         /// </summary>
         public string body { get; set; }
+        
         /// <summary>
         /// 请求头
         /// </summary>
         public IDictionary<string, string> headers { get; set; }
+        
         /// <summary>
         /// 需要Cookie
         /// </summary>
         public bool need_cookie { get; set; } = false;
+
+        /// <summary>
+        /// 需要Wbi签名
+        /// </summary>
+        public bool need_wbi { get; set; } = false;
 
         /// <summary>
         /// 请求地址
@@ -207,9 +217,8 @@ namespace BiliLite.Api
 
         private async Task<string> caculate_parameter()
         {
-            //ApiParameter p = await WbiHelper.EncodeWbi(parameter);
-            //return p.ToString();
-            return parameter.ToString();
+            ApiParameter p = need_wbi ? await WbiHelper.EncodeWbi(parameter) : parameter;
+            return p.ToString();
         }
     }
 }

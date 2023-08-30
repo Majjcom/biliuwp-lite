@@ -96,8 +96,8 @@ namespace BiliLite.Modules.User.UserDetail
                 Nothing = false;
                 SubmitVideoCanLoadMore = false;
                 LoadingSubmitVideo = true;
-                var api = userDetailAPI.SubmitVideos(mid, SubmitVideoPage, keyword: Keyword, tid: SelectTid.tid, order: (SubmitVideoOrder)SelectOrder);
                 CurrentTid = SelectTid.tid;
+                var api = userDetailAPI.SubmitVideos(mid, SubmitVideoPage, keyword: Keyword, tid: SelectTid.tid, order: (SubmitVideoOrder)SelectOrder);
                 var results = await api.Request();
                 if (results.status)
                 {

@@ -186,7 +186,7 @@ namespace BiliLite.Modules
                     return;
                 }
 
-                
+
                 List<VideoDetailRelatesModel> relates = await LoadRecommend(data.data.bvid);
                 if (relates != null)
                 {
@@ -285,7 +285,7 @@ namespace BiliLite.Modules
             }
             catch (Exception ex)
             {
-               var handel = HandelError<object>(ex);
+                var handel = HandelError<object>(ex);
                 Utils.ShowMessageToast(handel.message);
             }
 

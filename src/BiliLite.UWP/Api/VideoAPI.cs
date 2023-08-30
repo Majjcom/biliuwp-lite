@@ -10,7 +10,6 @@ namespace BiliLite.Api
     {
         public ApiModel Detail(string id,bool isbvid)
         {
-            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&{(isbvid?"bvid=":"aid=")}{id}&plat=0"
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
@@ -24,6 +23,21 @@ namespace BiliLite.Api
                 need_cookie = true
             };
             //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&{(isbvid?"bvid=":"aid=")}{id}&plat=0"
+            //ApiModel api = new ApiModel()
+            //{
+            //    method = RestSharp.Method.Get,
+            //    baseUrl = $"https://app.bilibili.com/x/v2/view",
+            //    //baseUrl = $"https://api.bilibili.com/x/web-interface/view",
+            //    parameter = new ApiParameter
+            //    {
+            //        { isbvid ? "bvid" : "aid", id },
+            //        { "plat", "0" }
+            //    } + ApiHelper.MustParameter(ApiHelper.AndroidTVKey, true),
+            //    //need_cookie = true
+            //};
+            //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidTVKey);
             return api;
         }
 
