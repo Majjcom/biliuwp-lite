@@ -13,29 +13,26 @@ namespace BiliLite.Api
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
-                //baseUrl = $"https://app.bilibili.com/x/v2/view",
                 baseUrl = $"https://api.bilibili.com/x/web-interface/view",
                 parameter = new ApiParameter
                 {
                     { isbvid ? "bvid" : "aid", id },
                     { "plat", "0" }
-                },// + ApiHelper.MustParameter(ApiHelper.AndroidKey, true),
+                },
                 need_cookie = true
             };
-            //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
 
-            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&{(isbvid?"bvid=":"aid=")}{id}&plat=0"
+            //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&{(isbvid ? "bvid=" : "aid=")}{id}&plat=0"
             //ApiModel api = new ApiModel()
             //{
             //    method = RestSharp.Method.Get,
             //    baseUrl = $"https://app.bilibili.com/x/v2/view",
-            //    //baseUrl = $"https://api.bilibili.com/x/web-interface/view",
+            //    need_wbi = true,
             //    parameter = new ApiParameter
             //    {
             //        { isbvid ? "bvid" : "aid", id },
             //        { "plat", "0" }
             //    } + ApiHelper.MustParameter(ApiHelper.AndroidTVKey, true),
-            //    //need_cookie = true
             //};
             //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidTVKey);
             return api;
@@ -64,6 +61,46 @@ namespace BiliLite.Api
             };
             return api;
         }
+
+        /// <summary>
+        /// 是否被点赞
+        /// </summary>
+        /// <param name="id">av号或bv号</param>
+        /// <param name="isbvid">是否是bv号</param>
+        /// <returns></returns>
+        public ApiModel IsLike(string id, bool isbvid)
+        {
+            ApiModel api = new ApiModel
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = "https://api.bilibili.com/x/web-interface/archive/has/like",
+                parameter = new ApiParameter
+                {
+                    { isbvid ? "bvid" : "aid", id }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidTVKey, true)
+            };
+            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidTVKey);
+
+            return api;
+        }
+
+        //https://api.bilibili.com/x/web-interface/archive/relation
+        public ApiModel VideoRelation(string id, bool isbvid)
+        {
+            ApiModel api = new ApiModel
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = "https://api.bilibili.com/x/web-interface/archive/relation",
+                parameter = new ApiParameter
+                {
+                    { isbvid ? "bvid" : "aid", id }
+                } + ApiHelper.MustParameter(ApiHelper.AndroidTVKey, true)
+            };
+            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidTVKey);
+
+            return api;
+        }
+
         /// <summary>
         ///点赞
         /// </summary>

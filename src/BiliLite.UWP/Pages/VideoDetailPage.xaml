@@ -286,11 +286,11 @@
                                             <TextBlock Margin="8 0" FontSize="12" Foreground="Gray"><Run Text="{x:Bind Path=videoDetailVM.VideoInfo.owner_ext.fans,Mode=OneWay,Converter={StaticResource numberToStringConvert}}"/>粉丝</TextBlock>
                                         </StackPanel>
                                         <Button Width="80" 
-                                    Visibility="{x:Bind Path=videoDetailVM.VideoInfo.req_user.attention,Converter={StaticResource display},ConverterParameter=1,Mode=OneWay}" 
+                                    Visibility="{x:Bind Path=videoDetailVM.VideoInfo.req_user.not_attention,Converter={StaticResource display},ConverterParameter=true,Mode=OneWay}" 
                                     Command="{x:Bind Path=videoDetailVM.AttentionCommand}" 
                                     Grid.Column="2" Padding="16 4"  FontSize="12">已关注</Button>
                                         <Button Width="80" 
-                                    Visibility="{x:Bind Path=videoDetailVM.VideoInfo.req_user.attention,Converter={StaticResource display},ConverterParameter=-999,Mode=OneWay}" 
+                                    Visibility="{x:Bind Path=videoDetailVM.VideoInfo.req_user.attention,Converter={StaticResource display},ConverterParameter=false,Mode=OneWay}" 
                                     Command="{x:Bind Path=videoDetailVM.AttentionCommand}" 
                                     Grid.Column="2" Padding="16 4"  BorderThickness="1" Background="Transparent" BorderBrush="{ThemeResource HighLightColor}" Foreground="{ThemeResource HighLightColor}" FontSize="12">关注</Button>
                                     </Grid>

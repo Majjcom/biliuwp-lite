@@ -193,6 +193,12 @@ namespace BiliLite.Modules
                     data.data.relates = relates;
                 }
 
+                VideoDetailReqUserModel relate = await LoadRelate(data.data.bvid);
+                if (relate != null)
+                {
+                    data.data.req_user = relate;
+                }
+
                 VideoInfo = data.data;
                 Loaded = true;
                 _videoUrl = $"https://www.bilibili.com/video/{VideoInfo.bvid}";
@@ -233,6 +239,25 @@ namespace BiliLite.Modules
             return data.data;
         }
 
+        public async Task<VideoDetailReqUserModel> LoadRelate(string bvid)
+        {
+            var resault = await videoAPI.VideoRelation(bvid, true).Request();
+            if (!resault.status)
+            {
+                Utils.ShowMessageToast("加载视频关系失败");
+                return null;
+            }
+
+            var data = await resault.GetJson<ApiDataModel<VideoDetailReqUserModel>>();
+            if (!data.success)
+            {
+                Utils.ShowMessageToast("加载视频关系失败");
+                return null;
+            }
+
+            return data.data;
+        }
+
         public void Refresh()
         {
 
@@ -248,7 +273,7 @@ namespace BiliLite.Modules
 
             try
             {
-                var results = await videoAPI.Like(VideoInfo.aid, VideoInfo.req_user.dislike, VideoInfo.req_user.like).Request();
+                var results = await videoAPI.Like(VideoInfo.aid, VideoInfo.req_user.dislike ? 1 : 0, VideoInfo.req_user.like ? 1 : 0).Request();
                 if (!results.status)
                 {
                     Utils.ShowMessageToast(results.message);
@@ -262,15 +287,15 @@ namespace BiliLite.Modules
                     return;
                 }
 
-                if (VideoInfo.req_user.like == 1)
+                if (VideoInfo.req_user.like)
                 {
-                    VideoInfo.req_user.like = 0;
+                    VideoInfo.req_user.like = false;
                     VideoInfo.stat.like -= 1;
                 }
                 else
                 {
-                    VideoInfo.req_user.like = 1;
-                    VideoInfo.req_user.dislike = 0;
+                    VideoInfo.req_user.like = true;
+                    VideoInfo.req_user.dislike = false;
                     VideoInfo.stat.like += 1;
                 }
 
@@ -300,22 +325,22 @@ namespace BiliLite.Modules
             }
             try
             {
-                var results = await videoAPI.Dislike(VideoInfo.aid, VideoInfo.req_user.dislike, VideoInfo.req_user.like).Request();
+                var results = await videoAPI.Dislike(VideoInfo.aid, VideoInfo.req_user.dislike ? 1 : 0, VideoInfo.req_user.like ? 1 : 0).Request();
                 if (results.status)
                 {
                     var data = await results.GetJson<ApiDataModel<JObject>>();
                     if (data.success)
                     {
-                        if (VideoInfo.req_user.dislike == 1)
+                        if (VideoInfo.req_user.dislike)
                         {
-                            VideoInfo.req_user.dislike = 0;
+                            VideoInfo.req_user.dislike = false;
                         }
                         else
                         {
-                            VideoInfo.req_user.dislike = 1;
-                            if (VideoInfo.req_user.like==1)
+                            VideoInfo.req_user.dislike = true;
+                            if (VideoInfo.req_user.like)
                             {
-                                VideoInfo.req_user.like = 0;
+                                VideoInfo.req_user.like = false;
                                 VideoInfo.stat.like -= 1;
                             }
                           
@@ -364,15 +389,15 @@ namespace BiliLite.Modules
                     var data = await results.GetJson<ApiDataModel<JObject>>();
                     if (data.success)
                     {
-                        VideoInfo.req_user.like = 1;
+                        VideoInfo.req_user.like = true;
                         VideoInfo.stat.like += 1;
                         VideoInfo.req_user.coin = 1;
                         VideoInfo.stat.coin += 1;
-                        VideoInfo.req_user.favorite = 1;
+                        VideoInfo.req_user.favorite = true;
                         VideoInfo.stat.favorite += 1;
-                        if (VideoInfo.req_user.dislike == 1)
+                        if (VideoInfo.req_user.dislike)
                         {
-                            VideoInfo.req_user.dislike = 0;
+                            VideoInfo.req_user.dislike = false;
                         }
 
                         Utils.ShowMessageToast("三连完成");
@@ -468,12 +493,12 @@ namespace BiliLite.Modules
                     {
                         if (fav_ids.Count != 0)
                         {
-                            VideoInfo.req_user.favorite = 1;
+                            VideoInfo.req_user.favorite = true;
                             VideoInfo.stat.favorite += 1;
                         }
                         else
                         {
-                            VideoInfo.req_user.favorite = 0;
+                            VideoInfo.req_user.favorite = false;
                             VideoInfo.stat.favorite -= 1;
                         }
                         if (!string.IsNullOrEmpty(data.data["toast"]?.ToString()))
@@ -509,17 +534,17 @@ namespace BiliLite.Modules
 
         public async void DoAttentionUP()
         {
-            var result = await AttentionUP(VideoInfo.owner.mid, VideoInfo.req_user.attention==1?2:1);
+            var result = await AttentionUP(VideoInfo.owner.mid, VideoInfo.req_user.attention ? 2 : 1);
             if (result)
             {
-                if (VideoInfo.req_user.attention == 1)
+                if (VideoInfo.req_user.attention)
                 {
-                    VideoInfo.req_user.attention = -999;
+                    VideoInfo.req_user.attention = false;
                     VideoInfo.owner_ext.fans -= 1;
                 }
                 else
                 {
-                    VideoInfo.req_user.attention = 1;
+                    VideoInfo.req_user.attention = true;
                     VideoInfo.owner_ext.fans += 1;
                 }
             }
@@ -833,15 +858,17 @@ namespace BiliLite.Modules
     }
     public class VideoDetailReqUserModel:IModules
     {
-        private int _attention;
+        private bool _attention;
         /// <summary>
         /// 是否关注
         /// </summary>
-        public int attention
+        public bool attention
         {
             get { return _attention; }
             set { _attention = value;DoPropertyChanged("attention"); }
         }
+
+        public bool not_attention => !_attention;
 
         private int _guest_attention;
         /// <summary>
@@ -853,21 +880,21 @@ namespace BiliLite.Modules
             set { _guest_attention = value; DoPropertyChanged("guest_attention"); }
         }
 
-        private int _favorite;
+        private bool _favorite;
         /// <summary>
         /// 是否收藏
         /// </summary>
-        public int favorite
+        public bool favorite
         {
             get { return _favorite; }
             set { _favorite = value; DoPropertyChanged("favorite"); }
         }
 
-        private int _like;
+        private bool _like;
         /// <summary>
         /// 是否点赞
         /// </summary>
-        public int like
+        public bool like
         {
             get { return _like; }
             set { _like = value; DoPropertyChanged("like"); }
@@ -883,11 +910,11 @@ namespace BiliLite.Modules
             set { _coin = value; DoPropertyChanged("coin"); }
         }
 
-        private int _dislike;
+        private bool _dislike;
         /// <summary>
         /// 是否不喜欢
         /// </summary>
-        public int dislike
+        public bool dislike
         {
             get { return _dislike; }
             set { _dislike = value; DoPropertyChanged("dislike"); }

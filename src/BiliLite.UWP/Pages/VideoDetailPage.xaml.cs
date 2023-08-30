@@ -346,7 +346,7 @@ namespace BiliLite.Pages
 
         private void btnLike_Holding(object sender, HoldingRoutedEventArgs e)
         {
-            if (videoDetailVM.VideoInfo.req_user.like == 0)
+            if (!videoDetailVM.VideoInfo.req_user.like)
             {
                 videoDetailVM.DoTriple();
             }
@@ -455,7 +455,7 @@ namespace BiliLite.Pages
 
         private void btnLike_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            if (videoDetailVM.VideoInfo.req_user.like == 0)
+            if (!videoDetailVM.VideoInfo.req_user.like)
             {
                 videoDetailVM.DoTriple();
             }

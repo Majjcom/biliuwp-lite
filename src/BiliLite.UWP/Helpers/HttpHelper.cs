@@ -357,9 +357,9 @@ namespace BiliLite.Helpers
         public async Task<T> GetJson<T>()
         {
             return await Task.Run<T>(() =>
-             {
-                 return JsonConvert.DeserializeObject<T>(results);
-             });
+            {
+                return JsonConvert.DeserializeObject<T>(results);
+            });
 
         }
         public JObject GetJObject()
