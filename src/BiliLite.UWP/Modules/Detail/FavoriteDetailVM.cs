@@ -108,7 +108,7 @@ namespace BiliLite.Modules
                 {
                     api = favoriteApi.FavoriteSeasonInfo(Id, Keyword, Page);
                 }
-                var results = await api.Request();
+                var results = await api.Request(); // fix 授权失败
                 if (results.status)
                 {
                     var data = await results.GetJson<ApiDataModel<FavoriteDetailModel>>();

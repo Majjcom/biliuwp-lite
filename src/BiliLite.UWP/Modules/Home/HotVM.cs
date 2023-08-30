@@ -60,7 +60,7 @@ namespace BiliLite.Modules
                     var data =  results.GetJObject();
                     if (data["code"].ToInt32()==0)
                     {
-                        if (TopItems==null)
+                        if (TopItems == null && data["config"]["top_items"] != null)
                         {
                             TopItems = JsonConvert.DeserializeObject<List<HotTopItemModel>>(data["config"]["top_items"].ToString());
                         }

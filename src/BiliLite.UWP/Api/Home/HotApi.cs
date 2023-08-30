@@ -19,7 +19,7 @@ namespace BiliLite.Api.Home
                 {
                     { "idx", idx },
                     { "last_param", last_param }
-                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
+                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, false)
             };
             api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;

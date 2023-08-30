@@ -14,16 +14,19 @@ namespace BiliLite.Api
             ApiModel api = new ApiModel()
             {
                 method = RestSharp.Method.Get,
-                baseUrl = $"https://app.bilibili.com/x/v2/view",
+                //baseUrl = $"https://app.bilibili.com/x/v2/view",
+                baseUrl = $"https://api.bilibili.com/x/web-interface/view",
                 parameter = new ApiParameter
                 {
                     { isbvid ? "bvid" : "aid", id },
                     { "plat", "0" }
-                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
+                },// + ApiHelper.MustParameter(ApiHelper.AndroidKey, true),
+                need_cookie = true
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            //api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
             return api;
         }
+
         public ApiModel DetailProxy(string id, bool isbvid)
         {
             //ApiHelper.MustParameter(ApiHelper.AndroidKey, true) + $"&{(isbvid ? "bvid=" : "aid=")}{id}&plat=0"
@@ -164,6 +167,21 @@ namespace BiliLite.Api
                 body = body.ToString()
             };
             api.body += '&' + ApiHelper.GetSign(api.body, ApiHelper.AndroidKey).ToString();
+            return api;
+        }
+
+        public ApiModel Recommend(string id, bool isbvid)
+        {
+            ApiModel api = new ApiModel
+            {
+                method = RestSharp.Method.Get,
+                baseUrl = $"{ApiHelper.API_BASE_URL}/x/web-interface/archive/related",
+                parameter = new ApiParameter
+                {
+                    { isbvid ? "bvid" : "aid", id },
+                }
+            };
+
             return api;
         }
     }

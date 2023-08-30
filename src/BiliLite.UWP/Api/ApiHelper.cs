@@ -120,7 +120,7 @@ namespace BiliLite.Api
             ApiParameter ret = new ApiParameter
             {
                 { "appkey", apikey.Appkey },
-                { "build", build },
+                //{ "build", build },
                 { "mobi_app", _mobi_app },
                 { "platform", _platform },
                 { "ts", Utils.GetTimestampS().ToString() },

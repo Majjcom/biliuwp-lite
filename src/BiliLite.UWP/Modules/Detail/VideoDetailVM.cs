@@ -50,6 +50,8 @@ namespace BiliLite.Modules
 
         }
 
+        private string _videoUrl = "";
+        public string VideoUrl => _videoUrl;
 
         private bool _loading = true;
         public bool Loading
@@ -155,39 +157,41 @@ namespace BiliLite.Modules
                 Loaded = false;
                 Loading = true;
                 ShowError = false;
-                var results = await videoAPI.Detail(id, isbvid).Request();
-                if (results.status)
-                {
-                    var data = await results.GetJson<ApiDataModel<VideoDetailModel>>();
-                    if (!data.success)
-                    {
-                        var result_proxy = await videoAPI.DetailProxy(id, isbvid).Request();
-                        if (result_proxy.status)
-                        {
-                            data = await result_proxy.GetJson<ApiDataModel<VideoDetailModel>>();
-                        }
-                    }
-                    if (data.success)
-                    {
-                        VideoInfo = data.data;
-                        Loaded = true;
-
-                        await LoadFavorite(data.data.aid);
-                    }
-                    else
-                    {
-                        ShowError = true;
-                        ErrorMsg = data.message;
-                        //Utils.ShowMessageToast(data.message);
-                    }
-                }
-                else
+                
+                var api = videoAPI.Detail(id, isbvid);
+                var results = await api.Request();
+                if (!results.status)
                 {
                     ShowError = true;
                     ErrorMsg = results.message;
                     //Utils.ShowMessageToast(results.message);
-
+                    return;
                 }
+
+                var data = await results.GetJson<ApiDataModel<VideoDetailModel>>();
+                if (!data.success)
+                {
+                    var result_proxy = await videoAPI.DetailProxy(id, isbvid).Request();
+                    if (result_proxy.status)
+                    {
+                        data = await result_proxy.GetJson<ApiDataModel<VideoDetailModel>>();
+                    }
+                }
+
+                if (!data.success)
+                {
+                    ShowError = true;
+                    ErrorMsg = data.message;
+                    //Utils.ShowMessageToast(data.message);
+                    return;
+                }
+
+                VideoInfo = data.data;
+                Loaded = true;
+                _videoUrl = $"https://www.bilibili.com/video/{VideoInfo.bvid}";
+
+                await LoadRecommend(data.data.bvid);
+                await LoadFavorite(data.data.aid);
             }
             catch (Exception ex)
             {
@@ -201,10 +205,34 @@ namespace BiliLite.Modules
                 Loading = false;
             }
         }
+
+        public List<VideoDetailRelatesModel> Relates { set; get; }
+
+        public async Task LoadRecommend(string bvid)
+        {
+            var resault = await videoAPI.Recommend(bvid, true).Request();
+            if (!resault.status)
+            {
+                Utils.ShowMessageToast($"加载视频推荐失败：{resault.message}");
+                return;
+            }
+
+            var data = await resault.GetJson<ApiDataModel<List<VideoDetailRelatesModel>>>();
+            if (!data.success)
+            {
+                Utils.ShowMessageToast("解析视频推荐失败，错误信息写入日志");
+                LogHelper.Log($"解析JSON出现问题：{resault.results}", LogType.ERROR);
+                return;
+            }
+
+            Relates = data.data;
+        }
+
         public void Refresh()
         {
 
         }
+
         public async void DoLike()
         {
             if (!SettingHelper.Account.Logined&&!await Utils.ShowLoginDialog())
@@ -212,42 +240,42 @@ namespace BiliLite.Modules
                 Utils.ShowMessageToast("请先登录后再操作");
                 return;
             }
+
             try
             {
                 var results = await videoAPI.Like(VideoInfo.aid, VideoInfo.req_user.dislike, VideoInfo.req_user.like).Request();
-                if (results.status)
+                if (!results.status)
                 {
-                    var data = await results.GetJson<ApiDataModel<JObject>>();
-                    if (data.success)
-                    {
-                        if (VideoInfo.req_user.like == 1)
-                        {
-                            VideoInfo.req_user.like = 0;
-                            VideoInfo.stat.like -= 1;
-                        }
-                        else
-                        {
-                            VideoInfo.req_user.like = 1;
-                            VideoInfo.req_user.dislike = 0;
-                            VideoInfo.stat.like += 1;
-                        }
-                        if (!string.IsNullOrEmpty( data.data["toast"]?.ToString()))
-                        {
-                            Utils.ShowMessageToast(data.data["toast"].ToString());
-                        }
-                        else
-                        {
-                            Utils.ShowMessageToast("操作成功");
-                        }
-                    }
-                    else
-                    {
-                        Utils.ShowMessageToast(data.message);
-                    }
+                    Utils.ShowMessageToast(results.message);
+                    return;
+                }
+
+                var data = await results.GetJson<ApiDataModel<JObject>>();
+                if (!data.success)
+                {
+                    Utils.ShowMessageToast(data.message);
+                    return;
+                }
+
+                if (VideoInfo.req_user.like == 1)
+                {
+                    VideoInfo.req_user.like = 0;
+                    VideoInfo.stat.like -= 1;
                 }
                 else
                 {
-                    Utils.ShowMessageToast(results.message);
+                    VideoInfo.req_user.like = 1;
+                    VideoInfo.req_user.dislike = 0;
+                    VideoInfo.stat.like += 1;
+                }
+
+                if (!string.IsNullOrEmpty(data.data["toast"]?.ToString()))
+                {
+                    Utils.ShowMessageToast(data.data["toast"].ToString());
+                }
+                else
+                {
+                    Utils.ShowMessageToast("操作成功");
                 }
             }
             catch (Exception ex)

@@ -157,9 +157,9 @@ namespace BiliLite.Pages
             await videoDetailVM.LoadVideoDetail(id, is_bvid);
             if (this.VideoCover != null)
             {
-                this.VideoCover.Visibility = SettingHelper.GetValue<bool>(SettingHelper.UI.SHOW_DETAIL_COVER, true) ? Visibility.Visible : Visibility.Collapsed;
+                this.VideoCover.Visibility = SettingHelper.GetValue(SettingHelper.UI.SHOW_DETAIL_COVER, true) ? Visibility.Visible : Visibility.Collapsed;
             }
-            if (SettingHelper.GetValue<bool>("一键三连提示", true))
+            if (SettingHelper.GetValue("一键三连提示", true))
             {
                 SettingHelper.SetValue("一键三连提示", false);
                 Utils.ShowMessageToast("右键或长按点赞按钮可以一键三连哦~", 5);
@@ -221,6 +221,7 @@ namespace BiliLite.Pages
             }
             flag = false;
         }
+
         private void CreateQR()
         {
             try
@@ -233,7 +234,7 @@ namespace BiliLite.Pages
                     Height = 200,
                     Width = 200
                 };
-                var data = barcodeWriter.Write(videoDetailVM.VideoInfo.short_link);
+                var data = barcodeWriter.Write(videoDetailVM.VideoUrl);
                 imgQR.Source = data;
             }
             catch (Exception ex)
