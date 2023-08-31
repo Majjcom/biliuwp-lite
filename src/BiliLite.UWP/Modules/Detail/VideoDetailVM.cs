@@ -193,10 +193,13 @@ namespace BiliLite.Modules
                     data.data.relates = relates;
                 }
 
-                VideoDetailReqUserModel relate = await LoadRelate(data.data.bvid);
-                if (relate != null)
+                if (SettingHelper.Account.Logined)
                 {
-                    data.data.req_user = relate;
+                    VideoDetailReqUserModel relate = await LoadRelate(data.data.bvid);
+                    if (relate != null)
+                    {
+                        data.data.req_user = relate;
+                    }
                 }
 
                 VideoInfo = data.data;

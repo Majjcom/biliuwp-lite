@@ -285,7 +285,7 @@ namespace BiliLite.Pages
                 });
             });
             //自动跳转下一P
-            swAutoNext.IsOn = SettingHelper.GetValue<bool>(SettingHelper.Player.AUTO_NEXT, true);
+            swAutoNext.IsOn = SettingHelper.GetValue<bool>(SettingHelper.Player.AUTO_NEXT, false);
             swAutoNext.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 swAutoNext.Toggled += new RoutedEventHandler((obj, args) =>
@@ -352,7 +352,7 @@ namespace BiliLite.Pages
                 });
             });
             //替换CDN
-            cbPlayerReplaceCDN.SelectedIndex = SettingHelper.GetValue<int>(SettingHelper.Player.REPLACE_CDN, 3);
+            cbPlayerReplaceCDN.SelectedIndex = SettingHelper.GetValue<int>(SettingHelper.Player.REPLACE_CDN, 0);
             cbPlayerReplaceCDN.Loaded += new RoutedEventHandler((sender, e) =>
             {
                 cbPlayerReplaceCDN.SelectionChanged += new SelectionChangedEventHandler((obj, args) =>

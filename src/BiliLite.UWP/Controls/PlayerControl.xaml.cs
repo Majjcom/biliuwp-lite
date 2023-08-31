@@ -674,7 +674,7 @@ namespace BiliLite.Controls
                 SettingHelper.SetValue<bool>(SettingHelper.Player.AUTO_TO_POSITION, PlayerSettingAutoToPosition.IsOn);
             });
             //自动跳转
-            PlayerSettingAutoNext.IsOn = SettingHelper.GetValue<bool>(SettingHelper.Player.AUTO_NEXT, true);
+            PlayerSettingAutoNext.IsOn = SettingHelper.GetValue<bool>(SettingHelper.Player.AUTO_NEXT, false);
             PlayerSettingAutoNext.Toggled += new RoutedEventHandler((e, args) =>
             {
                 SettingHelper.SetValue<bool>(SettingHelper.Player.AUTO_NEXT, PlayerSettingAutoNext.IsOn);
