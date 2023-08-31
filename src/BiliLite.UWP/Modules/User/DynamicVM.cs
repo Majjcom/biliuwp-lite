@@ -336,6 +336,7 @@ namespace BiliLite.Modules.User
             }
             await sendDynamicDialog.ShowAsync();
         }
+
         public async Task GetDynamicItems(string idx = "")
         {
             try

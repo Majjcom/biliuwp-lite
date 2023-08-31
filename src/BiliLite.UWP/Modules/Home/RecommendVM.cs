@@ -437,7 +437,7 @@ namespace BiliLite.Modules
         public string text { get; set; }
         public string text_color { get; set; }
 
-        public string bg_color { get; set; }
+        public string bg_color { get; set; } = "#FFFFFFFF";
 
         public string border_color { get; set; }
         public string text_color_night { get; set; }

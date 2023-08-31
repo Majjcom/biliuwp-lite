@@ -145,9 +145,9 @@ namespace BiliLite.Modules
         public string title { get; set; }
         public string idx { get; set; }
         public string uri { get; set; }
-        public string cover_right_text_1 { get; set; }
-        public string right_desc_1 { get; set; }
-        public string right_desc_2 { get; set; }
+        public string cover_left_text_1 { get; set; }
+        public string cover_left_text_2 { get; set; }
+        public string desc { get; set; }
         public RecommendRcmdReasonStyleModel rcmd_reason_style { get; set; }
     }
 }

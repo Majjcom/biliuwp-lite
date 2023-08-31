@@ -243,9 +243,9 @@ namespace BiliLite.Api.User
                     { "keyword", Uri.EscapeDataString(keyword) },
                     { "pn", page.ToString() },
                     { "ps", "20" }
-                } + ApiHelper.MustParameter(ApiHelper.AndroidKey, true)
+                } + ApiHelper.MustParameter(ApiHelper.AndroidTVKey, true)
             };
-            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidKey);
+            api.parameter += ApiHelper.GetSign(api.parameter, ApiHelper.AndroidTVKey);
             return api;
         }
         public ApiModel FavoriteSeasonInfo(string season_id, string keyword, int page = 1)
